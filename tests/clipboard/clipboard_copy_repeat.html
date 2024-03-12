@@ -1,0 +1,120 @@
+<!--
+This code is written in JavaScript and is used to handle clipboard items in a
+web page. It's designed to read the contents of the clipboard and perform
+different actions based on the type of the content.
+
+The code starts with a for...of loop, which iterates over each item in the
+clipboardItems array. Each item in this array represents a piece of data that
+has been copied or cut to the clipboard.
+
+Inside the loop, the code first checks if the item's type includes "text/plain"
+using the includes method. If it does, the code calls an asynchronous function
+readClipboardItem with the item, the type "text/plain", and a callback function
+as arguments. The callback function takes the content read from the clipboard
+and assigns it to the value of an HTML element with the id "paste-text". This
+effectively pastes the plain text content from the clipboard into this HTML
+element.
+
+If the item's type does not include "text/plain", the code then checks if it
+includes "text/html". If it does, the code again calls the readClipboardItem
+function, but this time with the type "text/html" and a different callback
+function. This callback function assigns the content read from the clipboard to
+the value of an HTML element with the id "paste-html". This pastes the HTML
+content from the clipboard into this HTML element.
+
+If the item's type is neither "text/plain" nor "text/html", the code does
+nothing and moves on to the next item in the clipboardItems array.
+
+This code is a good example of how to handle different types of clipboard data
+in a web page. It uses modern JavaScript features like for...of loops, includes,
+and async/await to read from the clipboard and update the page in a clean and
+efficient way.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta author="Neeraj Sharma">
+    <title>Clipboard</title>
+</head>
+
+<body>
+    <h1>Clipboard</h1>
+    <p>Copy the text below to your clipboard:</p>
+    <textarea id="copy-text" rows="4" cols="50">Hello, world!</textarea>
+    <button onclick="copyToClipboard()">Copy</button>
+    <textarea id="paste-text" rows="4" cols="50"></textarea>
+    <textarea id="paste-html" rows="4" cols="50"></textarea>
+    <button onclick="pasteFromClipboard()">Paste</button>
+    <button onclick="pasteRepeatedly()">Paste Repeatedly</button>
+
+    <script>
+        function copyToClipboard() {
+            var copyText = document.getElementById("copy-text");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+        }
+
+        async function readClipboardItem(item, itemType, setContentCallback) {
+            let reader = new FileReader;
+            reader.addEventListener("load", loadEvent => {
+                setContentCallback(reader.result);
+            });
+            reader.readAsText(await item.getType(itemType));
+        }
+
+        async function pasteFromClipboard() {
+            // -----
+            // Option-1: (deprecated)
+            // pasteText.focus();
+            // document.execCommand("paste");
+            // -----
+            // Option-2:
+            // 
+            const clipboardItems = await navigator.clipboard.read();
+            console.log('clipboardItems = ', clipboardItems);
+            for (let item of clipboardItems) {
+                if (item.types.includes("text/plain")) {
+                    let pasteTexValue = await readClipboardItem(item, "text/plain", (content) => {
+                        document.getElementById("paste-text").value = content;
+                    });
+                } else if (item.types.includes("text/html")) {
+                    let pasteHtmlValue = await readClipboardItem(item, "text/html", (content) => {
+                        document.getElementById("paste-html").value = content;
+                    });
+                } else {
+                    // do nothing
+                }
+            }
+            // -----
+            // Option-3:
+            // Read text from clipboard without worrying about the type of data
+            //
+            // navigator.clipboard
+            //     .readText()
+            //     .then(
+            //         (clipText) => (document.querySelector("#paste-text").innerText = clipText),
+            //     );
+        }
+
+        async function pasteRepeatedly() {
+            // for (let i = 0; i < 5; i++) {
+            //     console.log('i = ', i);
+            //     await pasteFromClipboard();
+            // }
+
+            // start a timer and then call pasteFromClipboard() repeatedly
+            // and restart the timer
+            let timerId = setInterval(() => {
+                console.log('pasted');
+                pasteFromClipboard();
+            }, 500);
+            setTimeout(() => {
+                clearInterval(timerId);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
