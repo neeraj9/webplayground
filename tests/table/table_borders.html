@@ -1,0 +1,87 @@
+<!--
+The provided HTML, CSS, and JavaScript code aims to create a table with borders
+and populate it with data dynamically.
+
+The HTML structure includes a table element with an id of "countryTable". Inside
+the table, there is a table row (tr) that serves as the header row, containing
+three table headers (th) for "Country", "GDP", and "Population".
+
+The CSS styles define the appearance of the table. The "table" selector sets the
+table layout to collapse and the width to 100%. The "th" and "td" selectors
+specify padding, text alignment, and border styles for the table headers and
+cells. The "tr:nth-child(2)" selector adds a thicker bottom border to the second
+row, creating a visual separation between the header row and the data rows.
+
+The JavaScript code defines an array called "countryData" that holds objects
+representing different countries' data. Each object has properties for
+"country", "gdp", and "population".
+
+The script then dynamically generates table rows based on the "countryData"
+array. It retrieves the "countryTable" element using its id and iterates over
+the "countryData" array. For each object in the array, it inserts a new row
+(insertRow) into the table and inserts three cells (insertCell) for the country,
+GDP, and population data. The innerHTML property is used to set the content of
+each cell based on the corresponding object property.
+
+To complete the code, you can add the desired functionality or modifications at
+the $PLACEHOLDER$ location using the appropriate HTML, CSS, or JavaScript code
+enclosed in ``` blocks.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            border-top: 1px solid #ddd;
+            border-bottom: 2px solid #000;
+        }
+        
+        tr:nth-child(2) {
+            border-bottom: 2px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <table id="countryTable">
+        <tr>
+            <th>Country</th>
+            <th>GDP</th>
+            <th>Population</th>
+        </tr>
+    </table>
+
+    <script>
+        var countryData = [
+            { country: "United States", gdp: "21.43 trillion", population: "331 million" },
+            { country: "China", gdp: "15.42 trillion", population: "1.4 billion" },
+            { country: "Japan", gdp: "5.08 trillion", population: "126 million" },
+            { country: "Germany", gdp: "3.85 trillion", population: "83 million" },
+            { country: "India", gdp: "2.87 trillion", population: "1.38 billion" }
+        ];
+
+        // Generate table rows dynamically
+        var table = document.getElementById("countryTable");
+        for (var i = 0; i < countryData.length; i++) {
+            var row = table.insertRow();
+            var countryCell = row.insertCell(0);
+            var gdpCell = row.insertCell(1);
+            var populationCell = row.insertCell(2);
+
+            countryCell.innerHTML = countryData[i].country;
+            gdpCell.innerHTML = countryData[i].gdp;
+            populationCell.innerHTML = countryData[i].population;
+        }
+    </script>
+</body>
+</html>
