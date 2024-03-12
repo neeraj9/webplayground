@@ -1,0 +1,94 @@
+
+<!--
+The table row border or cell border are applied such that the top border
+of row N starts at the bottom of the row N-1. The bottom border of row N
+ends at the top of row N+1. This is why the border of the first row is
+applied to the top of the table, and the border of the last row is applied
+to the bottom of the table. The border of the last row is also applied to
+the bottom of the last cell in the last row.
+
+
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th, td {
+            padding: 0px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            border-top: 1px solid #ddd;
+            border-bottom: 2px solid #000;
+        }
+        
+        tr:nth-child(2) {
+            border-bottom: 2px solid #000;
+        }
+        
+        tr.overlap {
+            border-bottom: 4px solid #000;
+            border-top: 8px solid #000;
+        }
+        
+        tr.overlap2 {
+            border-bottom: 16px solid #dc1f1f;
+            border-top: 8px solid #5f5dda;
+            /* watch what happens when border-top is changed to 2,3,4,5,6,7 px
+            one value at a time */
+            /* border-top: 4px solid #5f5dda; */
+        }
+
+        tr.no-overlap {
+            border-bottom: 2px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <table id="countryTable">
+        <tr>
+            <th>Country</th>
+            <th>GDP</th>
+            <th>Population</th>
+        </tr>
+    </table>
+
+    <script>
+        var countryData = [
+            { country: "United States", gdp: "21.43 trillion", population: "331 million" },
+            { country: "China", gdp: "15.42 trillion", population: "1.4 billion" },
+            { country: "Japan", gdp: "5.08 trillion", population: "126 million" },
+            { country: "Germany", gdp: "3.85 trillion", population: "83 million" },
+            { country: "India", gdp: "2.87 trillion", population: "1.38 billion" }
+        ];
+
+        // Generate table rows dynamically
+        var table = document.getElementById("countryTable");
+        for (var i = 0; i < countryData.length; i++) {
+            var row = table.insertRow();
+            var countryCell = row.insertCell(0);
+            var gdpCell = row.insertCell(1);
+            var populationCell = row.insertCell(2);
+
+            countryCell.textContent = countryData[i].country;
+            gdpCell.textContent = countryData[i].gdp;
+            populationCell.textContent = countryData[i].population;
+
+            if (countryData[i].country === "Germany") {
+                row.classList.add("overlap");
+            } else if (countryData[i].country === "India") {
+                row.classList.add("overlap2");
+            } else {
+                // row.classList.add("no-overlap");
+            }
+        }
+    </script>
+</body>
+</html>
