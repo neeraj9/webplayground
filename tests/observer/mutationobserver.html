@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MutationObserver Example</title>
+</head>
+<body>
+    <iframe id="myIframe"></iframe>
+
+    <script>
+        // Get the iframe element
+        const iframe = document.getElementById('myIframe');
+
+        // Create a MutationObserver instance
+        const observer = new MutationObserver((mutationsList, observer) => {
+            // Log the mutations to the console
+            console.log(mutationsList);
+
+            let result = 0.0;
+            // Perform a high CPU computation
+            for (let i = 0; i < 100; i++) {
+                // Perform calculations here
+                // Example: Square the value of i
+                result += i * i;
+                const sinResult = Math.sin(result);
+                const sqrtI = Math.sqrt(i);
+                const finalResult = sinResult + sqrtI;
+                result += finalResult;
+                //console.log(finalResult);
+            }
+        });
+
+        // Configure and start observing the iframe's content
+        observer.observe(iframe.contentDocument, { childList: true, subtree: true });
+
+        // Function to create HTML content inside the iframe
+        function createContent() {
+            const iframeDocument = iframe.contentDocument;
+            const newElement = iframeDocument.createElement('p');
+            newElement.textContent = 'New HTML content created!';
+            iframeDocument.body.appendChild(newElement);
+        }
+
+        // Add onload event to iframeDocument
+        iframe.contentDocument.onload = function() {
+            console.log('Iframe document loaded');
+        };
+    </script>
+
+    <button onclick="createContent()">Create HTML Content</button>
+</body>
+</html>
